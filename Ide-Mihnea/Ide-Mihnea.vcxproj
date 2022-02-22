@@ -150,6 +150,11 @@
     <ClCompile Include="IDE.cpp" />
     <ClCompile Include="InsertCharacterAction.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MoveCaretDownAction.cpp" />
+    <ClCompile Include="MoveCaretLeftAction.cpp" />
+    <ClCompile Include="MoveCaretRightAction.cpp" />
+    <ClCompile Include="MoveCaretUpAction.cpp" />
+    <ClCompile Include="TabifyAction.cpp" />
     <ClCompile Include="testing.cpp" />
     <ClCompile Include="ZoomCommand.cpp" />
   </ItemGroup>
@@ -158,6 +163,11 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="IDE.h" />
     <ClInclude Include="InsertCharacterAction.h" />
+    <ClInclude Include="MoveCaretDownAction.h" />
+    <ClInclude Include="MoveCaretLeftAction.h" />
+    <ClInclude Include="MoveCaretRightAction.h" />
+    <ClInclude Include="MoveCaretUpAction.h" />
+    <ClInclude Include="TabifyAction.h" />
     <ClInclude Include="ZoomCommand.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

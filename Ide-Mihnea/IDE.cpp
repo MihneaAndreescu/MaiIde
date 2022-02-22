@@ -5,9 +5,14 @@
 #include <functional>
 #include <random>
 #include <chrono>
-#include "ZoomCommand.h"
 #include "InsertCharacterAction.h"
+#include "TabifyAction.h"
+#include "MoveCaretLeftAction.h"
+#include "MoveCaretRightAction.h"
+#include "MoveCaretUpAction.h"
+#include "MoveCaretDownAction.h"
 
+#include "ZoomCommand.h"
 using namespace std;
 
 mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
@@ -16,203 +21,7 @@ uniform_real_distribution<> distrib01(0, 1);
 
 
 
-class PressTabAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int shiftBy;
-public:
-	PressTabAction(IDE& state) :
-		m_state(state) {
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-		int tabSize = m_state.getTabSize();
 
-		shiftBy = tabSize - currentColCaretPosition % tabSize;
-
-		m_state.insert(currentRowCaretPosition, currentColCaretPosition, string(shiftBy, ' '));
-		currentColCaretPosition += shiftBy;
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-	void undoAction() override {
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		currentColCaretPosition -= shiftBy;
-		for (int iter = 1; iter <= shiftBy; iter++) {
-			m_state.eraseChar(currentRowCaretPosition, currentColCaretPosition);
-		}
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
-class MoveCaretLeftAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int init_row, init_col;
-
-public:
-	MoveCaretLeftAction(IDE& state) :
-		m_state(state) {
-
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		init_row = currentRowCaretPosition;
-		init_col = currentColCaretPosition;
-
-		currentColCaretPosition--;
-		if (currentColCaretPosition < 0) {
-			if (currentRowCaretPosition == 0) {
-				currentColCaretPosition++;
-			}
-			else {
-				currentRowCaretPosition--;
-				currentColCaretPosition = m_state.getRowSize(currentRowCaretPosition);
-			}
-		}
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-	void undoAction() override {
-		m_state.setCurrentRowPosition(init_row);
-		m_state.setCurrentColPosition(init_col);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
-class MoveCaretRightAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int init_row, init_col;
-
-public:
-	MoveCaretRightAction(IDE& state) :
-		m_state(state) {
-
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		init_row = currentRowCaretPosition;
-		init_col = currentColCaretPosition;
-
-		currentColCaretPosition++;
-		if (currentColCaretPosition == m_state.getRowSize(currentRowCaretPosition) + 1) {
-			if (currentRowCaretPosition + 1 == m_state.getTotalNumberOfRows()) {
-				currentColCaretPosition--;
-			}
-			else {
-				currentRowCaretPosition++;
-				currentColCaretPosition = 0;
-			}
-		}
-
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-	void undoAction() override {
-
-		m_state.setCurrentRowPosition(init_row);
-		m_state.setCurrentColPosition(init_col);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
-class MoveCaretUpAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int init_row, init_col;
-
-public:
-	MoveCaretUpAction(IDE& state) :
-		m_state(state) {
-
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		init_row = currentRowCaretPosition;
-		init_col = currentColCaretPosition;
-
-		currentRowCaretPosition--;
-		if (currentRowCaretPosition == -1) {
-			currentRowCaretPosition++;
-		}
-		else {
-			currentColCaretPosition = min(currentColCaretPosition, m_state.getRowSize(currentRowCaretPosition));
-		}
-
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-	void undoAction() override {
-
-		m_state.setCurrentRowPosition(init_row);
-		m_state.setCurrentColPosition(init_col);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
-class MoveCaretDownAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int init_row, init_col;
-
-public:
-	MoveCaretDownAction(IDE& state) :
-		m_state(state) {
-
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		init_row = currentRowCaretPosition;
-		init_col = currentColCaretPosition;
-
-		currentRowCaretPosition++;
-		if (currentRowCaretPosition == (int)m_state.getTotalNumberOfRows()) {
-			currentRowCaretPosition--;
-		}
-		else {
-			currentColCaretPosition = min(currentColCaretPosition, m_state.getRowSize(currentRowCaretPosition));
-		}
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-	void undoAction() override {
-
-		m_state.setCurrentRowPosition(init_row);
-		m_state.setCurrentColPosition(init_col);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
 class NewLineAction : public Action {
 private:
 	long long init_hash;
@@ -673,7 +482,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<PressTabAction>(ide));
+		ide.doAction(make_unique<TabifyAction>(ide));
 		return true;
 	}
 };
