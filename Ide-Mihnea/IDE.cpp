@@ -11,8 +11,11 @@
 #include "MoveCaretRightAction.h"
 #include "MoveCaretUpAction.h"
 #include "MoveCaretDownAction.h"
+#include "NewLineAction.h"
+#include "DeleteBeforeAction.h"
 
 #include "ZoomCommand.h"
+
 using namespace std;
 
 mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
@@ -22,125 +25,6 @@ uniform_real_distribution<> distrib01(0, 1);
 
 
 
-class NewLineAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int init_col;
-
-public:
-	NewLineAction(IDE& state) :
-		m_state(state) {
-
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		init_col = currentColCaretPosition;
-
-		string after = "";
-
-		for (int i = currentColCaretPosition; i < m_state.getRowSize(currentRowCaretPosition); i++) {
-			after += m_state.getChar(currentRowCaretPosition, i);
-		}
-		m_state.resizeRow(currentRowCaretPosition, currentColCaretPosition);
-		m_state.insert(currentRowCaretPosition + 1, after);
-		currentColCaretPosition = 0;
-		currentRowCaretPosition++;
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-	void undoAction() override {
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		currentRowCaretPosition--;
-		currentColCaretPosition = init_col;
-		string after = m_state.getRow(currentRowCaretPosition + 1);
-		m_state.erase(currentRowCaretPosition + 1);
-		m_state.setRow(currentRowCaretPosition, m_state.getRow(currentRowCaretPosition) + after);
-
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
-class DeleteBeforeAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int iftype = 0;
-	int sizeOfRow;
-	char deletedChar;
-	int init_row;
-	int init_col;
-
-public:
-	DeleteBeforeAction(IDE& state) :
-		m_state(state) {
-	}
-
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-		init_row = currentRowCaretPosition;
-		init_col = currentColCaretPosition;
-		if (currentColCaretPosition == 0) {
-			if (currentRowCaretPosition > 0) {
-				iftype = 1;
-				currentColCaretPosition = m_state.getRowSize(currentRowCaretPosition - 1);
-				sizeOfRow = m_state.getRowSize(currentRowCaretPosition);
-				string Joint = m_state.getRow(currentRowCaretPosition - 1) + m_state.getRow(currentRowCaretPosition);
-				m_state.setRow(currentRowCaretPosition - 1, Joint);
-
-				m_state.erase(currentRowCaretPosition);
-				currentRowCaretPosition--;
-			}
-		}
-		else {
-			iftype = 2;
-			currentColCaretPosition--;
-			deletedChar = m_state.getChar(currentRowCaretPosition, currentColCaretPosition);
-
-			m_state.eraseChar(currentRowCaretPosition, currentColCaretPosition);
-		}
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-	void undoAction() override {
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-		if (iftype == 1) {
-			currentRowCaretPosition++;
-			int sz = sizeOfRow;
-			string thestr;
-
-			for (int i = m_state.getRowSize(currentRowCaretPosition - 1) - sz; i < m_state.getRowSize(currentRowCaretPosition - 1); i++) {
-				thestr += m_state.getChar(currentRowCaretPosition - 1, i);
-			}
-
-			m_state.insert(currentRowCaretPosition, thestr);
-			m_state.resizeRow(currentRowCaretPosition - 1, m_state.getRowSize(currentRowCaretPosition - 1) - sz);
-
-			currentColCaretPosition = m_state.getRowSize(currentRowCaretPosition - 1);
-		}
-		if (iftype == 2) {
-			m_state.insert(currentRowCaretPosition, currentColCaretPosition, deletedChar);
-			currentColCaretPosition++;
-		}
-		m_state.setCurrentRowPosition(init_row);
-		m_state.setCurrentColPosition(init_col);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
 
 class MoveCaretToMouseAction : public Action {
 private:
