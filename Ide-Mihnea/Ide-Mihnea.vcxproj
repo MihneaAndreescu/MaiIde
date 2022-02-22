@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="IDE.cpp" />
+    <ClCompile Include="InsertCharacterAction.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="testing.cpp" />
     <ClCompile Include="ZoomCommand.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Action.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="IDE.h" />
+    <ClInclude Include="InsertCharacterAction.h" />
     <ClInclude Include="ZoomCommand.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

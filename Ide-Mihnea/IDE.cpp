@@ -6,6 +6,7 @@
 #include <random>
 #include <chrono>
 #include "ZoomCommand.h"
+#include "InsertCharacterAction.h"
 
 using namespace std;
 
@@ -15,52 +16,13 @@ uniform_real_distribution<> distrib01(0, 1);
 
 
 
-class InsertCharacter : public Action {
-private:
-	long long init_hash;
-	char m_charToInsert;
-	IDE& m_state;
-public:
-	InsertCharacter(IDE& state, char charToInsert) :
-		m_state(state),
-		m_charToInsert(charToInsert) {
-
-	}
-
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		m_state.insert(currentRowCaretPosition, currentColCaretPosition, m_charToInsert);
-		currentColCaretPosition++;
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-
-	void undoAction() override {
-		int currentRowCaretPosition = m_state.getCurrentRowPosition();
-		int currentColCaretPosition = m_state.getCurrentColPosition();
-
-		currentColCaretPosition--;
-		m_state.eraseChar(currentRowCaretPosition, currentColCaretPosition);
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-
-};
-class PressTab : public Action {
+class PressTabAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
 	int shiftBy;
 public:
-	PressTab(IDE& state) :
+	PressTabAction(IDE& state) :
 		m_state(state) {
 	}
 	void doAction() override {
@@ -92,14 +54,14 @@ public:
 		assert(hashnow == init_hash);
 	}
 };
-class MoveCaretLeft : public Action {
+class MoveCaretLeftAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
 	int init_row, init_col;
 
 public:
-	MoveCaretLeft(IDE& state) :
+	MoveCaretLeftAction(IDE& state) :
 		m_state(state) {
 
 	}
@@ -132,14 +94,14 @@ public:
 		assert(hashnow == init_hash);
 	}
 };
-class MoveCaretRight : public Action {
+class MoveCaretRightAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
 	int init_row, init_col;
 
 public:
-	MoveCaretRight(IDE& state) :
+	MoveCaretRightAction(IDE& state) :
 		m_state(state) {
 
 	}
@@ -174,14 +136,14 @@ public:
 		assert(hashnow == init_hash);
 	}
 };
-class MoveCaretUp : public Action {
+class MoveCaretUpAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
 	int init_row, init_col;
 
 public:
-	MoveCaretUp(IDE& state) :
+	MoveCaretUpAction(IDE& state) :
 		m_state(state) {
 
 	}
@@ -213,14 +175,14 @@ public:
 		assert(hashnow == init_hash);
 	}
 };
-class MoveCaretDown : public Action {
+class MoveCaretDownAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
 	int init_row, init_col;
 
 public:
-	MoveCaretDown(IDE& state) :
+	MoveCaretDownAction(IDE& state) :
 		m_state(state) {
 
 	}
@@ -251,14 +213,14 @@ public:
 		assert(hashnow == init_hash);
 	}
 };
-class PressReturn : public Action {
+class NewLineAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
 	int init_col;
 
 public:
-	PressReturn(IDE& state) :
+	NewLineAction(IDE& state) :
 		m_state(state) {
 
 	}
@@ -299,7 +261,7 @@ public:
 		assert(hashnow == init_hash);
 	}
 };
-class PressBackspace : public Action {
+class DeleteBeforeAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
@@ -310,7 +272,7 @@ private:
 	int init_col;
 
 public:
-	PressBackspace(IDE& state) :
+	DeleteBeforeAction(IDE& state) :
 		m_state(state) {
 	}
 
@@ -371,14 +333,14 @@ public:
 	}
 };
 
-class MoveCaretToMouse : public Action {
+class MoveCaretToMouseAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
 	int init_row, init_col;
 
 public:
-	MoveCaretToMouse(IDE& state) :
+	MoveCaretToMouseAction(IDE& state) :
 		m_state(state) {
 
 	}
@@ -479,14 +441,14 @@ public:
 	}
 };
 
-class DuplicateLine : public Action {
+class DuplicateLineAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
 
 
 public:
-	DuplicateLine(IDE& state) :
+	DuplicateLineAction(IDE& state) :
 		m_state(state) {
 
 	}
@@ -516,7 +478,7 @@ public:
 	}
 };
 
-class Indent : public Action {
+class IndentAction : public Action {
 private:
 	long long init_hash;
 	IDE& m_state;
@@ -525,7 +487,7 @@ private:
 	vector<string> init_rows;
 
 public:
-	Indent(IDE& state) :
+	IndentAction(IDE& state) :
 		m_state(state) {
 
 	}
@@ -604,20 +566,20 @@ public:
 		return true;
 	}
 };
-class InsertCharCommand : public Command {
+class InsertCharacterCommand : public Command {
 private:
 	IDE& ide;
 	bool triggered(sf::Event event) override {
 		return (event.type == sf::Event::TextEntered && isprint(event.text.unicode));
 	}
 public:
-	InsertCharCommand(IDE& ide) : ide(ide) {
+	InsertCharacterCommand(IDE& ide) : ide(ide) {
 
 	}
 
 	bool execute(sf::Event event) override {
 		char charToInsert = event.text.unicode;
-		ide.doAction(make_unique<InsertCharacter>(ide, charToInsert));
+		ide.doAction(make_unique<InsertCharacterAction>(ide, charToInsert));
 		return true;
 	}
 };
@@ -663,7 +625,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<Indent>(ide));
+		ide.doAction(make_unique<IndentAction>(ide));
 		return true;
 	}
 };
@@ -695,7 +657,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<DuplicateLine>(ide));
+		ide.doAction(make_unique<DuplicateLineAction>(ide));
 		return true;
 	}
 };
@@ -711,7 +673,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<PressTab>(ide));
+		ide.doAction(make_unique<PressTabAction>(ide));
 		return true;
 	}
 };
@@ -727,7 +689,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<PressBackspace>(ide));
+		ide.doAction(make_unique<DeleteBeforeAction>(ide));
 		return true;
 	}
 };
@@ -743,7 +705,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<PressReturn>(ide));
+		ide.doAction(make_unique<NewLineAction>(ide));
 		return true;
 	}
 };
@@ -759,7 +721,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretLeft>(ide));
+		ide.doAction(make_unique<MoveCaretLeftAction>(ide));
 		return true;
 	}
 };
@@ -775,7 +737,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretRight>(ide));
+		ide.doAction(make_unique<MoveCaretRightAction>(ide));
 		return true;
 	}
 };
@@ -791,7 +753,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretUp>(ide));
+		ide.doAction(make_unique<MoveCaretUpAction>(ide));
 		return true;
 	}
 };
@@ -807,7 +769,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretDown>(ide));
+		ide.doAction(make_unique<MoveCaretDownAction>(ide));
 		return true;
 	}
 };
@@ -823,7 +785,7 @@ public:
 	}
 
 	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretToMouse>(ide));
+		ide.doAction(make_unique<MoveCaretToMouseAction>(ide));
 		return true;
 	}
 };
@@ -899,7 +861,7 @@ void IDE::initCommands() {
 	commands.push_back(make_unique<ZoomCommand>(*this));
 	commands.push_back(make_unique<CopyCommand>(*this));
 	commands.push_back(make_unique<PasteCommand>(*this));
-	commands.push_back(make_unique<InsertCharCommand>(*this));
+	commands.push_back(make_unique<InsertCharacterCommand>(*this));
 	commands.push_back(make_unique<RunCommand>(*this));
 	commands.push_back(make_unique<IndentCommand>(*this));
 	commands.push_back(make_unique<UndoCommand>(*this));
@@ -1258,8 +1220,8 @@ char IDE::getChar(int currentRowCaretPosition, int currentColCaretPosition) {
 	return rows[currentRowCaretPosition][currentColCaretPosition];
 }
 
-IDE::IDE(sf::Window& window, sf::Vector2i resolution) : 
-	window(window), 
+IDE::IDE(sf::Window& window, sf::Vector2i resolution) :
+	window(window),
 	resolution(resolution),
 	rows({ "" }),
 	unhighlightedColor(sf::Color(255, 255, 255))
