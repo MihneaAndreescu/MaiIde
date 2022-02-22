@@ -13,6 +13,7 @@
 #include "MoveCaretDownAction.h"
 #include "NewLineAction.h"
 #include "DeleteBeforeAction.h"
+#include "MoveCaretToMouseAction.h"
 
 #include "ZoomCommand.h"
 
@@ -25,39 +26,6 @@ uniform_real_distribution<> distrib01(0, 1);
 
 
 
-
-class MoveCaretToMouseAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int init_row, init_col;
-
-public:
-	MoveCaretToMouseAction(IDE& state) :
-		m_state(state) {
-
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-		int currentRowCaretPosition, currentColCaretPosition;
-		init_row = m_state.getCurrentRowPosition();
-		init_col = m_state.getCurrentColPosition();
-
-		sf::Vector2i g = m_state.getMouseEditorPosition();
-		currentRowCaretPosition = g.x;
-		currentColCaretPosition = g.y;
-
-		m_state.setCurrentRowPosition(currentRowCaretPosition);
-		m_state.setCurrentColPosition(currentColCaretPosition);
-	}
-	void undoAction() override {
-
-		m_state.setCurrentRowPosition(init_row);
-		m_state.setCurrentColPosition(init_col);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
 
 class PasteAction : public Action {
 private:
