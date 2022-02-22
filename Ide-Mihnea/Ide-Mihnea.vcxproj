@@ -148,7 +148,9 @@
   <ItemGroup>
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="DeleteBeforeAction.cpp" />
+    <ClCompile Include="DuplicateLineAction.cpp" />
     <ClCompile Include="IDE.cpp" />
+    <ClCompile Include="IndentAction.cpp" />
     <ClCompile Include="InsertCharacterAction.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MoveCaretDownAction.cpp" />
@@ -166,7 +168,9 @@
     <ClInclude Include="Action.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="DeleteBeforeAction.h" />
+    <ClInclude Include="DuplicateLineAction.h" />
     <ClInclude Include="IDE.h" />
+    <ClInclude Include="IndentAction.h" />
     <ClInclude Include="InsertCharacterAction.h" />
     <ClInclude Include="MoveCaretDownAction.h" />
     <ClInclude Include="MoveCaretLeftAction.h" />

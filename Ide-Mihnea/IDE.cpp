@@ -15,6 +15,8 @@
 #include "DeleteBeforeAction.h"
 #include "MoveCaretToMouseAction.h"
 #include "PasteAction.h"
+#include "DuplicateLineAction.h"
+#include "IndentAction.h"
 
 #include "ZoomCommand.h"
 
@@ -23,83 +25,6 @@ using namespace std;
 mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
 uniform_int_distribution<> distrib256(0, 255);
 uniform_real_distribution<> distrib01(0, 1);
-
-
-
-
-
-class DuplicateLineAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-
-
-public:
-	DuplicateLineAction(IDE& state) :
-		m_state(state) {
-
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-
-		int row = m_state.getCurrentRowPosition();
-		int col = m_state.getCurrentColPosition();
-
-		m_state.insert(row + 1, m_state.getRow(row));
-		row++;
-
-		m_state.setCurrentRowPosition(row);
-		m_state.setCurrentColPosition(col);
-	}
-	void undoAction() override {
-		int row = m_state.getCurrentRowPosition();
-		int col = m_state.getCurrentColPosition();
-
-		row--;
-		m_state.erase(row + 1);
-
-		m_state.setCurrentRowPosition(row);
-		m_state.setCurrentColPosition(col);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
-
-class IndentAction : public Action {
-private:
-	long long init_hash;
-	IDE& m_state;
-	int init_row;
-	int init_col;
-	vector<string> init_rows;
-
-public:
-	IndentAction(IDE& state) :
-		m_state(state) {
-
-	}
-	void doAction() override {
-		init_hash = m_state.getDebugHash();
-
-		init_row = m_state.getCurrentRowPosition();
-		init_col = m_state.getCurrentColPosition();
-		init_rows = m_state.getRows();
-
-		m_state.indent();
-	}
-	void undoAction() override {
-		int row = m_state.getCurrentRowPosition();
-		int col = m_state.getCurrentColPosition();
-
-		m_state.setRows(init_rows);
-		m_state.setCurrentRowPosition(init_row);
-		m_state.setCurrentColPosition(init_col);
-		long long hashnow = m_state.getDebugHash();
-		assert(hashnow == init_hash);
-	}
-};
-
-
 
 class CopyCommand : public Command {
 private:
