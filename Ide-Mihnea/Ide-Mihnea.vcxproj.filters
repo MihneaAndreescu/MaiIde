@@ -57,6 +57,9 @@
     <ClCompile Include="MoveCaretToMouseAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PasteAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Action.h">
@@ -96,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MoveCaretToMouseAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PasteAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

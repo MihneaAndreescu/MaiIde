@@ -157,6 +157,7 @@
     <ClCompile Include="MoveCaretToMouseAction.cpp" />
     <ClCompile Include="MoveCaretUpAction.cpp" />
     <ClCompile Include="NewLineAction.cpp" />
+    <ClCompile Include="PasteAction.cpp" />
     <ClCompile Include="TabifyAction.cpp" />
     <ClCompile Include="testing.cpp" />
     <ClCompile Include="ZoomCommand.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="MoveCaretToMouseAction.h" />
     <ClInclude Include="MoveCaretUpAction.h" />
     <ClInclude Include="NewLineAction.h" />
+    <ClInclude Include="PasteAction.h" />
     <ClInclude Include="TabifyAction.h" />
     <ClInclude Include="ZoomCommand.h" />
   </ItemGroup>
