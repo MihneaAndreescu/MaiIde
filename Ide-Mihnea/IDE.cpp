@@ -18,6 +18,7 @@
 #include "DuplicateLineAction.h"
 #include "IndentAction.h"
 
+#include "CopyCommand.h"
 #include "ZoomCommand.h"
 
 using namespace std;
@@ -26,32 +27,6 @@ mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
 uniform_int_distribution<> distrib256(0, 255);
 uniform_real_distribution<> distrib01(0, 1);
 
-class CopyCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl));
-	}
-public:
-	CopyCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		vector<string> all = ide.getSelected();
-		string s = "";
-
-		for (auto& sub : all) {
-			s += sub + "\n";
-		}
-		if (!s.empty()) {
-			assert(s.back() == '\n');
-			s.pop_back();
-		}
-		sf::Clipboard::setString(s);
-		return true;
-	}
-};
 class PasteCommand : public Command {
 private:
 	IDE& ide;
@@ -543,6 +518,7 @@ vector<string> IDE::getSelected() {
 	for (auto& h : selectedHighlighting) {
 		sol.push_back(getSubstr(h.row, h.firstCol, h.lastCol - 1)); /////////////////////// 108
 	}
+	cout << " = " << (int)sol.size() << "\n";
 	return sol;
 }
 

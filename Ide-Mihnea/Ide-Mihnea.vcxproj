@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="CopyCommand.cpp" />
     <ClCompile Include="DeleteBeforeAction.cpp" />
     <ClCompile Include="DuplicateLineAction.cpp" />
     <ClCompile Include="IDE.cpp" />
@@ -167,6 +168,7 @@
   <ItemGroup>
     <ClInclude Include="Action.h" />
     <ClInclude Include="Command.h" />
+    <ClInclude Include="CopyCommand.h" />
     <ClInclude Include="DeleteBeforeAction.h" />
     <ClInclude Include="DuplicateLineAction.h" />
     <ClInclude Include="IDE.h" />
