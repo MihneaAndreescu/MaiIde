@@ -27,6 +27,9 @@
 #include "RunCommand.h"
 #include "RedoCommand.h"
 #include "DuplicateLineCommand.h"
+#include "TabCommand.h"
+#include "DeleteBeforeCommand.h"
+#include "NewLineCommand.h"
 
 using namespace std;
 
@@ -38,54 +41,8 @@ uniform_real_distribution<> distrib01(0, 1);
 
 
 
-class TabCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab);
-	}
-public:
-	TabCommand(IDE& ide) : ide(ide) {
 
-	}
 
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<TabifyAction>(ide));
-		return true;
-	}
-};
-class DeleteBeforeCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Backspace);
-	}
-public:
-	DeleteBeforeCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<DeleteBeforeAction>(ide));
-		return true;
-	}
-};
-class NewLineCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return);
-	}
-public:
-	NewLineCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<NewLineAction>(ide));
-		return true;
-	}
-};
 class MoveLeftCommand : public Command {
 private:
 	IDE& ide;
