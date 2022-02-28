@@ -150,6 +150,7 @@
     <ClCompile Include="CopyCommand.cpp" />
     <ClCompile Include="DeleteBeforeAction.cpp" />
     <ClCompile Include="DuplicateLineAction.cpp" />
+    <ClCompile Include="DuplicateLineCommand.cpp" />
     <ClCompile Include="IDE.cpp" />
     <ClCompile Include="IndentAction.cpp" />
     <ClCompile Include="IndentCommand.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="NewLineAction.cpp" />
     <ClCompile Include="PasteAction.cpp" />
     <ClCompile Include="PasteCommand.cpp" />
+    <ClCompile Include="RedoCommand.cpp" />
     <ClCompile Include="RunCommand.cpp" />
     <ClCompile Include="TabifyAction.cpp" />
     <ClCompile Include="testing.cpp" />
@@ -175,6 +177,7 @@
     <ClInclude Include="CopyCommand.h" />
     <ClInclude Include="DeleteBeforeAction.h" />
     <ClInclude Include="DuplicateLineAction.h" />
+    <ClInclude Include="DuplicateLineCommand.h" />
     <ClInclude Include="IDE.h" />
     <ClInclude Include="IndentAction.h" />
     <ClInclude Include="IndentCommand.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="NewLineAction.h" />
     <ClInclude Include="PasteAction.h" />
     <ClInclude Include="PasteCommand.h" />
+    <ClInclude Include="RedoCommand.h" />
     <ClInclude Include="RunCommand.h" />
     <ClInclude Include="TabifyAction.h" />
     <ClInclude Include="ZoomCommand.h" />

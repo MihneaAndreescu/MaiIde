@@ -24,6 +24,9 @@
 #include "InsertCharacterCommand.h"
 #include "RunCommand.h"
 #include "IndentCommand.h"
+#include "RunCommand.h"
+#include "RedoCommand.h"
+#include "DuplicateLineCommand.h"
 
 using namespace std;
 
@@ -33,38 +36,8 @@ uniform_real_distribution<> distrib01(0, 1);
 
 
 
-class RedoCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Y && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
-	}
-public:
-	RedoCommand(IDE& ide) : ide(ide) {
 
-	}
 
-	bool execute(sf::Event event) override {
-		ide.redo();
-		return true;
-	}
-};
-class DuplicateLineCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
-	}
-public:
-	DuplicateLineCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<DuplicateLineAction>(ide));
-		return true;
-	}
-};
 class TabCommand : public Command {
 private:
 	IDE& ide;
