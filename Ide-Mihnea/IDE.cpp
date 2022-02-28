@@ -559,9 +559,7 @@ void IDE::update() {
 			if (i == r2) {
 				dr = c2;
 			}
-			if (st < dr) {
-				selectedHighlighting.push_back({ i, st, dr });
-			}
+			selectedHighlighting.push_back({ i, st, dr });
 		}
 	}
 	constantHighlighting.clear();
