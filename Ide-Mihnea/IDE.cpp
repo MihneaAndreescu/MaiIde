@@ -20,6 +20,7 @@
 
 #include "CopyCommand.h"
 #include "ZoomCommand.h"
+#include "PasteCommand.h"
 
 using namespace std;
 
@@ -27,32 +28,6 @@ mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
 uniform_int_distribution<> distrib256(0, 255);
 uniform_real_distribution<> distrib01(0, 1);
 
-class PasteCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::V && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
-	}
-public:
-	PasteCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		string s = sf::Clipboard::getString();
-		vector<string> paste;
-		for (auto& ch : s) {
-			if (ch == '\n') {
-				paste.push_back("");
-				continue;
-			}
-			if (paste.empty()) paste.push_back("");
-			paste.back() += ch;
-		}
-		ide.doAction(make_unique<PasteAction>(ide, paste));
-		return true;
-	}
-};
 class InsertCharacterCommand : public Command {
 private:
 	IDE& ide;
