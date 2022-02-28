@@ -21,6 +21,7 @@
 #include "CopyCommand.h"
 #include "ZoomCommand.h"
 #include "PasteCommand.h"
+#include "InsertCharacterCommand.h"
 
 using namespace std;
 
@@ -28,23 +29,6 @@ mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
 uniform_int_distribution<> distrib256(0, 255);
 uniform_real_distribution<> distrib01(0, 1);
 
-class InsertCharacterCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return (event.type == sf::Event::TextEntered && isprint(event.text.unicode));
-	}
-public:
-	InsertCharacterCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		char charToInsert = event.text.unicode;
-		ide.doAction(make_unique<InsertCharacterAction>(ide, charToInsert));
-		return true;
-	}
-};
 class RunCommand : public Command {
 private:
 	IDE& ide;

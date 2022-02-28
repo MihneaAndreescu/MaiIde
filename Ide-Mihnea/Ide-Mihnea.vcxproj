@@ -153,6 +153,7 @@
     <ClCompile Include="IDE.cpp" />
     <ClCompile Include="IndentAction.cpp" />
     <ClCompile Include="InsertCharacterAction.cpp" />
+    <ClCompile Include="InsertCharacterCommand.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MoveCaretDownAction.cpp" />
     <ClCompile Include="MoveCaretLeftAction.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="IDE.h" />
     <ClInclude Include="IndentAction.h" />
     <ClInclude Include="InsertCharacterAction.h" />
+    <ClInclude Include="InsertCharacterCommand.h" />
     <ClInclude Include="MoveCaretDownAction.h" />
     <ClInclude Include="MoveCaretLeftAction.h" />
     <ClInclude Include="MoveCaretRightAction.h" />
