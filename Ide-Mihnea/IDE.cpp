@@ -30,119 +30,18 @@
 #include "TabCommand.h"
 #include "DeleteBeforeCommand.h"
 #include "NewLineCommand.h"
+#include "MoveLeftCommand.h"
+#include "MoveRightCommand.h"
+#include "MoveUpCommand.h"
+#include "MoveDownCommand.h"
+#include "MoveCaretToCommand.h"
+#include "UndoCommand.h"
 
 using namespace std;
 
 mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
 uniform_int_distribution<> distrib256(0, 255);
 uniform_real_distribution<> distrib01(0, 1);
-
-
-
-
-
-
-
-class MoveLeftCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return  (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left);
-	}
-public:
-	MoveLeftCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretLeftAction>(ide));
-		return true;
-	}
-};
-class MoveRightCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return  (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right);
-	}
-public:
-	MoveRightCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretRightAction>(ide));
-		return true;
-	}
-};
-class MoveUpCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return  (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up);
-	}
-public:
-	MoveUpCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretUpAction>(ide));
-		return true;
-	}
-};
-class MoveDownCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return  (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down);
-	}
-public:
-	MoveDownCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretDownAction>(ide));
-		return true;
-	}
-};
-class MoveCaretToCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return (event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left);
-	}
-public:
-	MoveCaretToCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<MoveCaretToMouseAction>(ide));
-		return true;
-	}
-};
-
-class UndoCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
-	}
-public:
-	UndoCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.undoAction();
-		return true;
-	}
-};
-
-
-
 
 void IDE::addToHash(long long x) {
 	hash = 79623423432 * hash + x;

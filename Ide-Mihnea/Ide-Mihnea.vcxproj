@@ -161,8 +161,13 @@
     <ClCompile Include="MoveCaretDownAction.cpp" />
     <ClCompile Include="MoveCaretLeftAction.cpp" />
     <ClCompile Include="MoveCaretRightAction.cpp" />
+    <ClCompile Include="MoveCaretToCommand.cpp" />
     <ClCompile Include="MoveCaretToMouseAction.cpp" />
     <ClCompile Include="MoveCaretUpAction.cpp" />
+    <ClCompile Include="MoveDownCommand.cpp" />
+    <ClCompile Include="MoveLeftCommand.cpp" />
+    <ClCompile Include="MoveRightCommand.cpp" />
+    <ClCompile Include="MoveUpCommand.cpp" />
     <ClCompile Include="NewLineAction.cpp" />
     <ClCompile Include="NewLineCommand,cpp.cpp" />
     <ClCompile Include="PasteAction.cpp" />
@@ -172,6 +177,7 @@
     <ClCompile Include="TabCommand.cpp" />
     <ClCompile Include="TabifyAction.cpp" />
     <ClCompile Include="testing.cpp" />
+    <ClCompile Include="UndoCommand.cpp" />
     <ClCompile Include="ZoomCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -190,8 +196,13 @@
     <ClInclude Include="MoveCaretDownAction.h" />
     <ClInclude Include="MoveCaretLeftAction.h" />
     <ClInclude Include="MoveCaretRightAction.h" />
+    <ClInclude Include="MoveCaretToCommand.h" />
     <ClInclude Include="MoveCaretToMouseAction.h" />
     <ClInclude Include="MoveCaretUpAction.h" />
+    <ClInclude Include="MoveDownCommand.h" />
+    <ClInclude Include="MoveLeftCommand.h" />
+    <ClInclude Include="MoveRightCommand.h" />
+    <ClInclude Include="MoveUpCommand.h" />
     <ClInclude Include="NewLineAction.h" />
     <ClInclude Include="NewLineCommand.h" />
     <ClInclude Include="PasteAction.h" />
@@ -200,6 +211,7 @@
     <ClInclude Include="RunCommand.h" />
     <ClInclude Include="TabCommand.h" />
     <ClInclude Include="TabifyAction.h" />
+    <ClInclude Include="UndoCommand.h" />
     <ClInclude Include="ZoomCommand.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
