@@ -22,6 +22,8 @@
 #include "ZoomCommand.h"
 #include "PasteCommand.h"
 #include "InsertCharacterCommand.h"
+#include "RunCommand.h"
+#include "IndentCommand.h"
 
 using namespace std;
 
@@ -29,52 +31,8 @@ mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
 uniform_int_distribution<> distrib256(0, 255);
 uniform_real_distribution<> distrib01(0, 1);
 
-class RunCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl));
-	}
-public:
-	RunCommand(IDE& ide) : ide(ide) {
 
-	}
 
-	bool execute(sf::Event event) override {
-		ofstream myfile;
-		myfile.open("tet.cpp");
-		vector<string> rows = ide.getRows();
-		for (auto& row : rows) {
-			myfile << row << "\n";
-		}
-		myfile.close();
-		system("cls");
-		int ret = system("g++ tet.cpp -o outputfile.exe");
-		if (ret == 0) {
-			system("outputfile.exe");
-		}
-		else {
-			cout << "compilation error my friend\n";
-		}
-		return true;
-	}
-};
-class IndentCommand : public Command {
-private:
-	IDE& ide;
-	bool triggered(sf::Event event) override {
-		return event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::I && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
-	}
-public:
-	IndentCommand(IDE& ide) : ide(ide) {
-
-	}
-
-	bool execute(sf::Event event) override {
-		ide.doAction(make_unique<IndentAction>(ide));
-		return true;
-	}
-};
 class RedoCommand : public Command {
 private:
 	IDE& ide;
